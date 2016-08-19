@@ -1,0 +1,15 @@
+{
+  "name": "timestamp-server",
+  "version": "1.0.0",
+  "description": "Timestamp Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Carlson",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "pug": "^2.0.0-beta4"
+  }
+}
