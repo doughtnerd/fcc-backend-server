@@ -1,5 +1,5 @@
-module.exports = function(express){
-    var multer = require("multer");
+module.exports = function(express, multer){
+    
     var app = express();
     var upload = multer();
     

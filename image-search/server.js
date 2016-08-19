@@ -1,6 +1,6 @@
-module.exports = (function(express, mongodb){
+module.exports = (function(express, mongodb, search){
     var mongo = mongodb.MongoClient;
-    var Bing = require('bing.search');
+    var Bing = search;
     var extract = require("./json-extractor.js");
     
     var app = express();

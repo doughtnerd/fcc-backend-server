@@ -1,6 +1,5 @@
-module.exports = function(express, mongodb){
+module.exports = function(express, mongodb, valid){
     var mongo = mongodb.MongoClient;
-    var valid = require('valid-url');
     var app = express();
     var db = process.env.MONGOLAB_URI;
     
