@@ -13,6 +13,7 @@
     "bing.search": "^1.0.1",
     "express": "^4.14.0",
     "mongodb": "^2.2.7",
+    "mongoose": "^4.9.8",
     "multer": "^1.2.0",
     "pug": "^2.0.0-beta5",
     "valid-url": "^1.0.9"

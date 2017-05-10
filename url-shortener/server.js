@@ -1,69 +1,56 @@
-module.exports = function(express, mongodb, valid){
-    var mongo = mongodb.MongoClient;
-    var app = express();
-    var db = process.env.MONGOLAB_URI;
-    
-    app.set('view engine', 'pug');
-    app.set('views', __dirname + '/views/');
-    app.get('/', function(req, res) {
-        res.render('index');
-    });
-    
-    app.get('/:id', function(req, res){
-        var error;
-        mongo.connect(db, function(err, db){
-            if(!err){
-                var collection = db.collection('urls');
-                collection.findOne({short_url:+req.params.id}, function(err, data){
-                    if(!err){
-                        if(data){
-                            res.redirect(data['original_url']);
-                            
-                        } else {
-                            error = {error:"Could not find url"};
-                            res.json(error);// send();
-                        }
-                    } else {
-                        error = {error:"Error occurred while processing request."};
-                        res.json(error);
-                    }
-                });
-            } else {
-                error = {error:"Could not connect to database"};
-                res.json(error);
-            }
-        });
-    });
-    
-    app.get('/new/:url*', function(req, res){
-        var url = req.url.slice(5);
-        var error;
-        if(valid.isUri(url)){
-            mongo.connect(db, function(err, db){
-            if(!err){
-                var collection = db.collection('urls');
-                var shortID = Math.floor(100000 + Math.random() * 900000);
-                var newEntry = {original_url:url, short_url:shortID};
-                
-                collection.insert(newEntry, function(err, data){
-                    if(!err){
-                        res.json(newEntry)
-                    } else {
-                        error = {error:"Failed to insert new URL into Database " + err};
-                        res.json(error);
-                    }
-                });
-                db.close();
-            } else {
-                error = {error:"Could not connect to DB"};
-                res.json(error);
-            }
-        });
+'use strict';
+
+const express = require("express");
+const mongodb = require('mongodb');
+const valid = require('valid-url');
+
+//const mongo = mongodb.MongoClient;
+const app = express();
+
+//const db = process.env.MONGOLAB_URI;
+
+const lib = require("./lib");
+
+app.set('view engine', 'pug');
+app.set('views', __dirname + '/views/');
+
+
+app.get('/', function(req, res) {
+    res.render('index');
+});
+
+app.get('/:id', function(req, res){
+    lib.findAsync({short_url:+req.params.id}, {_id:0, __v:0}).then(function(result){
+        if(result){
+            res.redirect(result.original_url);
         } else {
-            error = {error:"Invalid URL"};
-            res.json(error);
+            res.status(400).send(Error("Could not find url").toString());
         }
-        
+    }).catch(function(err){
+        res.status(400).send(err.toString());
     });
-    return app;
-};
+});
+
+app.get('/new/:url*', function(req, res){
+    let promise = new Promise(function(resolve, reject){
+        let url = req.url.slice(5);
+        if(valid.isUri(url)){
+            resolve(url);
+        } else {
+            reject(Error("Invalid URL"));
+        }
+    });
+    
+    promise.then(function(result){
+        let shortID = Math.floor(100000 + Math.random() * 900000);
+        return lib.createAsync({original_url:result, short_url:shortID});
+    }).then(function(result){
+        return result.save();
+    }).then(function(result){
+        res.status(201).send(result);
+    }).catch(function(err){
+        res.status(400).send(err.toString());
+    });
+});
+
+module.exports = app;

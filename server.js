@@ -11,11 +11,14 @@ var imageSearch = require("./image-search/server.js");
 var headerParser = require("./header-parser/server.js");
 var fileMeta = require("./file-meta/server.js");
 
+app.set('view engine', 'pug');
+//app.set('views', __dirname + '/views/');
+
 app.get('/', function(req, res){
     res.send('There\'s nothing here');
 });
 
-app.use('/url-shortener', urlShort(express, mongodb, url));
+app.use('/url-shortener', urlShort(mongodb, url));
 app.use('/timestamp-server', timeStamp(express));
 app.use('/image-search', imageSearch(express, mongodb, search));
 app.use('/header-parser', headerParser(express));
