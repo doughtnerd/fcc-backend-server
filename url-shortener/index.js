@@ -1,13 +1,9 @@
 'use strict';
 
-const express = require("express");
 const mongodb = require('mongodb');
 const valid = require('valid-url');
 
-//const mongo = mongodb.MongoClient;
-const app = express();
-
-//const db = process.env.MONGOLAB_URI;
+const app = require("express")();
 
 const lib = require("./lib");
 
