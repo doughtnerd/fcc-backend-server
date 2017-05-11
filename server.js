@@ -1,8 +1,7 @@
-var express = require("express");
-var app = express();
+'use strict';
 
-app.set('view engine', 'pug');
-//app.set('views', __dirname + '/views/');
+const express = require("express");
+const app = express();
 
 app.get('/', function(req, res){
     res.send("There's nothing here.");

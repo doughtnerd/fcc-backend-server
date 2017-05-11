@@ -1,6 +1,8 @@
+'use strict';
+
 const app = require("express")();
 
-var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views/');
@@ -10,11 +12,11 @@ app.get('/', function(req, res){
 });
 
 app.get('/:ts', function(req, res){
-    var stamp = req.params.ts;
-    var date = new Date(stamp);
-    var isDate=date instanceof Date && !isNaN(date.valueOf());
-    var isUnix = !isNaN(stamp);
-    var obj;
+    const stamp = req.params.ts;
+    let date = new Date(stamp);
+    const isDate=date instanceof Date && !isNaN(date.valueOf());
+    const isUnix = !isNaN(stamp);
+    let obj;
     if(isUnix){
         date = new Date(0);
         date.setSeconds(stamp);
